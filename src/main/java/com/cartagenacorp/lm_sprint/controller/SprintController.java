@@ -1,6 +1,7 @@
 package com.cartagenacorp.lm_sprint.controller;
 
 import com.cartagenacorp.lm_sprint.entity.Sprint;
+import com.cartagenacorp.lm_sprint.service.IssueService;
 import com.cartagenacorp.lm_sprint.service.SprintService;
 import com.cartagenacorp.lm_sprint.util.RequiresPermission;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,10 +20,12 @@ import java.util.UUID;
 public class SprintController {
 
     private final SprintService sprintService;
+    private final IssueService issueService;
 
     @Autowired
-    public SprintController(SprintService sprintService) {
+    public SprintController(SprintService sprintService, IssueService issueService) {
         this.sprintService = sprintService;
+        this.issueService = issueService;
     }
 
     @GetMapping("/{sprintId}")
@@ -110,4 +114,22 @@ public class SprintController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("/{sprintId}/assign-issues")
+    @RequiresPermission({"SPRINT_CRUD"})
+    public ResponseEntity<Void> assignIssues(
+            @PathVariable UUID sprintId,
+            @RequestBody List<UUID> issueIds) {
+        issueService.assignIssuesToSprint(sprintId, issueIds);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/remove-issues")
+    @RequiresPermission({"SPRINT_CRUD"})
+    public ResponseEntity<Void> removeIssues(
+            @RequestBody List<UUID> issueIds) {
+        issueService.removeIssuesFromSprint(issueIds);
+        return ResponseEntity.ok().build();
+    }
+
 }
