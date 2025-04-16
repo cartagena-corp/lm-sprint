@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/sprints")
-@CrossOrigin("*")
 public class SprintController {
 
     private final SprintService sprintService;
