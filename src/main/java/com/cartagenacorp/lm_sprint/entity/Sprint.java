@@ -29,7 +29,7 @@ public class Sprint {
     private String goal;
 
     @Column(name = "status")
-    private String status; // PLANNED, IN_PROGRESS, COMPLETED
+    private Long status; // PLANNED, IN_PROGRESS, COMPLETED
 
     @Column(name = "startDate")
     private LocalDate startDate;
