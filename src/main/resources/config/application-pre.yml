@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: lm-sprint
+  datasource:
+    url: jdbc:postgresql://localhost:5433/lamuralla
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: 'false'
+server:
+  port: '8089'
+app:
+  cors:
+    allowed-origins: https://cartagenacorporation.com
+  jwt:
+    secret: ${JWT_SECRET}
+project:
+  service:
+    url: https://lm-projects.cartagenacorporation.com/api/projects
+issues:
+  service:
+    url: https://lm-issues.cartagenacorporation.com/api/issues
