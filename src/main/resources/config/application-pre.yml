@@ -8,9 +8,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    open-in-view: 'false'
+    open-in-view: false
+    driver-class-name: org.postgresql.Driver
 server:
-  port: '8089'
+  port: 8089
 app:
   cors:
     allowed-origins: https://cartagenacorporation.com,https://www.cartagenacorporation.com
@@ -18,7 +19,7 @@ app:
     secret: ${JWT_SECRET}
 project:
   service:
-    url: https://lm-projects.cartagenacorporation.com/api/projects
+    url: http://localhost:8082/api/projects
 issues:
   service:
-    url: https://lm-issues.cartagenacorporation.com/api/issues
+    url: http://localhost:8090/api/issues
