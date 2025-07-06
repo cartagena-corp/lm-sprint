@@ -67,6 +67,12 @@ public class SprintController {
 
     }
 
+    @GetMapping("/active/{projectId}")
+    public ResponseEntity<Sprint> getActiveSprint(@PathVariable UUID projectId) {
+        Sprint activeSprint = sprintService.getActiveSprint(projectId);
+        return ResponseEntity.ok(activeSprint);
+    }
+
     @PostMapping("/{sprintId}/assign-issues")
     @RequiresPermission({"SPRINT_CRUD"})
     public ResponseEntity<Void> assignIssues(

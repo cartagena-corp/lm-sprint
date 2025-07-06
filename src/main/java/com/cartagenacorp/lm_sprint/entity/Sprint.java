@@ -36,4 +36,7 @@ public class Sprint {
 
     @Column(name = "endDate")
     private LocalDate endDate;
+
+    @Column(name = "active")
+    private Boolean active;
 }

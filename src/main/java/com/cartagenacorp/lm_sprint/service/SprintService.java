@@ -55,6 +55,10 @@ public class SprintService {
                 sprint.getEndDate().isBefore(sprint.getStartDate())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The end date must be after or equal to the start date");
         }
+        if (Boolean.TRUE.equals(sprint.getActive()) &&
+                sprintRepository.existsByProjectIdAndActiveTrue(sprint.getProjectId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "There is already an active sprint for this project");
+        }
         return sprintRepository.save(sprint);
     }
 
@@ -68,13 +72,25 @@ public class SprintService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The end date must be after or equal to the start date");
         }
 
+        if (Boolean.TRUE.equals(sprint.getActive()) &&
+                sprintRepository.existsByProjectIdAndActiveTrueAndIdNot(sprintSearch.getProjectId(), sprintId)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "There is already an active sprint for this project");
+        }
+
         sprintSearch.setProjectId(sprintSearch.getProjectId());
         sprintSearch.setTitle(sprint.getTitle());
         sprintSearch.setGoal(sprint.getGoal());
         sprintSearch.setStatus(sprint.getStatus());
         sprintSearch.setStartDate(sprint.getStartDate());
         sprintSearch.setEndDate(sprint.getEndDate());
+        sprintSearch.setActive(sprint.getActive());
 
         return sprintRepository.save(sprintSearch);
+    }
+
+    @Transactional(readOnly = true)
+    public Sprint getActiveSprint(UUID projectId) {
+        return sprintRepository.findByProjectIdAndActiveTrue(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No active sprint found for this project"));
     }
 }
