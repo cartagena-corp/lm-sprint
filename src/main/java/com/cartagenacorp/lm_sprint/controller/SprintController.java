@@ -68,6 +68,7 @@ public class SprintController {
     }
 
     @GetMapping("/active/{projectId}")
+    @RequiresPermission({"SPRINT_CRUD", "SPRINT_READ"})
     public ResponseEntity<Sprint> getActiveSprint(@PathVariable UUID projectId) {
         Sprint activeSprint = sprintService.getActiveSprint(projectId);
         return ResponseEntity.ok(activeSprint);
