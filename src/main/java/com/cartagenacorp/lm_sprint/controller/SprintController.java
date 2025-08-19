@@ -26,14 +26,14 @@ public class SprintController {
     }
 
     @GetMapping("/{sprintId}")
-    @RequiresPermission({"SPRINT_CRUD", "SPRINT_READ"})
+    @RequiresPermission({"SPRINT_READ"})
     public ResponseEntity<?> getSprint(@PathVariable String sprintId) {
         UUID uuid = UUID.fromString(sprintId);
         return ResponseEntity.ok(sprintService.getSprintById(uuid));
     }
 
     @GetMapping("/project/{projectId}")
-    @RequiresPermission({"SPRINT_CRUD", "SPRINT_READ"})
+    @RequiresPermission({"SPRINT_READ"})
     public ResponseEntity<?> getAllSprintsByProject(@PathVariable String projectId) {
         UUID uuid = UUID.fromString(projectId);
         return ResponseEntity.ok(sprintService.getAllSprintsByProjectId(uuid));
@@ -46,20 +46,20 @@ public class SprintController {
     }
 
     @PostMapping
-    @RequiresPermission({"SPRINT_CRUD"})
+    @RequiresPermission({"SPRINT_CREATE"})
     public ResponseEntity<?> createSprint(@RequestBody Sprint sprint) {
         return new ResponseEntity<>(sprintService.createSprint(sprint), HttpStatus.CREATED);
     }
 
     @PutMapping("/{sprintId}")
-    @RequiresPermission({"SPRINT_CRUD"})
+    @RequiresPermission({"SPRINT_UPDATE"})
     public ResponseEntity<?> updateSprint(@PathVariable String sprintId, @RequestBody Sprint sprint) {
         UUID uuid = UUID.fromString(sprintId);
         return ResponseEntity.ok(sprintService.updateSprint(uuid, sprint));
     }
 
     @DeleteMapping("/{sprintId}")
-    @RequiresPermission({"SPRINT_CRUD"})
+    @RequiresPermission({"SPRINT_DELETE"})
     public ResponseEntity<?> deleteSprint(@PathVariable String sprintId) {
         UUID uuid = UUID.fromString(sprintId);
         sprintService.deleteSprint(uuid);
@@ -68,14 +68,14 @@ public class SprintController {
     }
 
     @GetMapping("/active/{projectId}")
-    @RequiresPermission({"SPRINT_CRUD", "SPRINT_READ"})
+    @RequiresPermission({"SPRINT_READ"})
     public ResponseEntity<Sprint> getActiveSprint(@PathVariable UUID projectId) {
         Sprint activeSprint = sprintService.getActiveSprint(projectId);
         return ResponseEntity.ok(activeSprint);
     }
 
     @PostMapping("/{sprintId}/assign-issues")
-    @RequiresPermission({"SPRINT_CRUD"})
+    @RequiresPermission({"ISSUE_UPDATE"})
     public ResponseEntity<Void> assignIssues(
             @PathVariable UUID sprintId,
             @RequestBody List<UUID> issueIds) {
@@ -84,7 +84,7 @@ public class SprintController {
     }
 
     @PostMapping("/remove-issues")
-    @RequiresPermission({"SPRINT_CRUD"})
+    @RequiresPermission({"ISSUE_UPDATE"})
     public ResponseEntity<Void> removeIssues(
             @RequestBody List<UUID> issueIds) {
         issueService.removeIssuesFromSprint(issueIds);
