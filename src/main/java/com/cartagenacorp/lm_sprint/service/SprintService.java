@@ -2,6 +2,7 @@ package com.cartagenacorp.lm_sprint.service;
 
 import com.cartagenacorp.lm_sprint.entity.Sprint;
 import com.cartagenacorp.lm_sprint.repository.SprintRepository;
+import com.cartagenacorp.lm_sprint.util.JwtContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class SprintService {
 
     @Transactional
     public Sprint createSprint(Sprint sprint){
-        if (!projectValidationService.validateProjectExists(sprint.getProjectId())) {
+        if (!projectValidationService.validateProjectExists(sprint.getProjectId(), JwtContextHolder.getToken())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The project ID provided is not valid");
         }
         if (sprint.getStartDate() != null && sprint.getEndDate() != null &&
