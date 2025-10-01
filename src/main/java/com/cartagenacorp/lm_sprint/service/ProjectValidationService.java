@@ -2,6 +2,9 @@ package com.cartagenacorp.lm_sprint.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -22,13 +25,24 @@ public class ProjectValidationService {
         this.restTemplate = restTemplate;
     }
 
-    public boolean validateProjectExists(UUID projectId) {
+    public boolean validateProjectExists(UUID projectId, String token) {
         if (projectId == null) {
             return false;
         }
         try {
             String url = projectServiceUrl + "/validate/" + projectId;
-            ResponseEntity<Boolean> response = restTemplate.getForEntity(url, Boolean.class);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<Boolean> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    Boolean.class
+            );
+
             return Boolean.TRUE.equals(response.getBody());
         } catch (HttpClientErrorException.NotFound ex) {
             return false;
